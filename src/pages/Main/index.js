@@ -1,4 +1,6 @@
+/* eslint-disable react/static-property-placement */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Keyboard, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -19,6 +21,16 @@ import {
 } from './styles';
 
 export default class Main extends React.Component {
+  static navigationOptions = {
+    title: 'Users',
+  };
+
+  static propTypes = {
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func,
+    }).isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -67,6 +79,12 @@ export default class Main extends React.Component {
     Keyboard.dismiss();
   };
 
+  handleNavigate = user => {
+    const { navigation } = this.props;
+
+    navigation.navigate('User', { user });
+  };
+
   render() {
     const { users, newUser, loading } = this.state;
 
@@ -100,7 +118,7 @@ export default class Main extends React.Component {
               <Name>{item.name}</Name>
               <Bio>{item.bio}</Bio>
 
-              <ProfileButton onPress={() => {}}>
+              <ProfileButton onPress={() => this.handleNavigate(item)}>
                 <ProfileButtonText>See profile</ProfileButtonText>
               </ProfileButton>
             </User>
@@ -110,7 +128,3 @@ export default class Main extends React.Component {
     );
   }
 }
-
-Main.navigationOptions = {
-  title: 'Users',
-};
